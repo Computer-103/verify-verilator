@@ -11,21 +11,20 @@ module soc_top (
     input  [ 4:0] dev_input_data,       // level
     output [ 4:0] dev_output_data,      // level
 
-    input  pnl_start_pulse,             // pulse
-    input  pnl_clear_pu,                // pulse
-    input  pnl_automatic,               // level
-    // TODO
+    input  btn_start_pulse,             // btn
+    input  btn_clear_pu,                // btn
 
-    input  pnl_start_input,             // pulse
-    input  pnl_stop_input,              // pulse
-    input  pnl_start_output,            // pulse
-    input  pnl_stop_output,             // pulse
+    input  btn_start_input,             // btn
+    input  btn_stop_input,              // btn
+    input  btn_start_output,            // btn
+    input  btn_stop_output,             // btn
 
-    input  pnl_input_dec,               // level
-    input  pnl_output_dec,              // level
+    input  sw_input_dec,                // level
+    input  sw_output_dec,               // level
 
-    input  pnl_continuous_input,        // level
-    input  pnl_stop_after_output,       // level
+    input  sw_continuous_input,         // level
+    input  sw_stop_after_output,        // level
+    input  sw_automatic,                // level
 
     input  pnl_do_arr_c,                // pulse
     input  [30:0] pnl_arr_reg_c_value,  // level
@@ -42,6 +41,22 @@ module soc_top (
     output [30:0] pnl_reg_c_value,      // level
     output [ 2:0] pnl_pu_state          // level
 );
+
+// pnl pulse
+wire  pnl_start_pulse;
+wire  pnl_clear_pu;
+wire  pnl_start_input;
+wire  pnl_stop_input; 
+wire  pnl_start_output;
+wire  pnl_stop_output;
+
+// pnl level
+wire pnl_input_dec;
+wire pnl_output_dec;
+wire pnl_continuous_input;
+wire pnl_stop_after_output;
+wire pnl_automatic;
+
 
 core_top  u_core_top (
     .clk                     ( clk                      ),
@@ -75,6 +90,63 @@ core_top  u_core_top (
     .pnl_sel_value           ( pnl_sel_value            ),
     .pnl_reg_c_value         ( pnl_reg_c_value          ),
     .pnl_pu_state            ( pnl_pu_state             )
+);
+
+button_pulse  start_pulse_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_start_pulse                   ),
+    .pulse  ( pnl_start_pulse                   )
+);
+button_pulse  clear_pu_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_clear_pu                      ),
+    .pulse  ( pnl_clear_pu                      )
+);
+button_pulse  start_input_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_start_input                   ),
+    .pulse  ( pnl_start_input                   )
+);
+button_pulse  stop_input_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_stop_input                    ),
+    .pulse  ( pnl_stop_input                    )
+);
+button_pulse  start_output_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_start_output                  ),
+    .pulse  ( pnl_start_output                  )
+);
+button_pulse  stop_output_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_stop_output                   ),
+    .pulse  ( pnl_stop_output                   )
+);
+
+switch_level  input_dec_switch_level (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .sw     ( sw_input_dec                      ),
+    .level  ( pnl_input_dec                     )
+);
+switch_level  output_dec_switch_level (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .sw     ( sw_output_dec                     ),
+    .level  ( pnl_output_dec                    )
+);
+switch_level  continuous_input_switch_level (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .sw     ( sw_continuous_input               ),
+    .level  ( pnl_continuous_input              )
+);
+switch_level  stop_after_output_switch_level (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .sw     ( sw_stop_after_output              ),
+    .level  ( pnl_stop_after_output             )
+);
+switch_level  automatic_switch_level (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .sw     ( sw_automatic                      ),
+    .level  ( pnl_automatic                     )
 );
 
 endmodule
