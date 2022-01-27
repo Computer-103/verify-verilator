@@ -1,15 +1,16 @@
 module sim_top (
-    input  clk,         // clk
-    input  resetn       // resetn
+    input  clk,             // clk
+    input  resetn,          // resetn
+    input  btn_start_input  // start_input
 );
 
 // soc_top Inputs]
-wire dev_input_val = 0;
-wire dev_output_ack = 0;
-wire [ 4:0]  dev_input_data = 0;
+wire dev_input_val;
+wire dev_output_ack;
+wire [ 4:0]  dev_input_data;
 wire btn_start_pulse = 0;
 wire btn_clear_pu = 0;
-wire btn_start_input = 0;
+// wire btn_start_input = 0;
 wire btn_stop_input = 0;
 wire btn_start_output = 0;
 wire btn_stop_output = 0;
@@ -67,6 +68,24 @@ soc_top  u_soc_top (
     .pnl_sel_value                          ( pnl_sel_value                           ),
     .pnl_reg_c_value                        ( pnl_reg_c_value                         ),
     .pnl_pu_state                           ( pnl_pu_state                            )
+);
+
+sim_input  u_sim_input (
+    .clk                     ( clk              ),
+    .resetn                  ( resetn           ),
+    .input_rdy               ( dev_input_rdy    ),
+
+    .input_val               ( dev_input_val    ),
+    .input_data              ( dev_input_data   )
+);
+
+sim_output  u_sim_output (
+    .clk                     ( clk              ),
+    .resetn                  ( resetn           ),
+    .output_rdy              ( dev_output_rdy   ),
+    .output_data             ( dev_output_data  ),
+
+    .output_ack              ( dev_output_ack   )
 );
 
 endmodule
