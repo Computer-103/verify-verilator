@@ -6,7 +6,7 @@ module sim_top (
     output machine_is_stop  // machine is stop
 );
 
-// soc_top Inputs]
+// soc_top Inputs
 wire dev_input_val;
 wire dev_output_ack;
 wire [ 4:0]  dev_input_data;
@@ -18,7 +18,7 @@ wire btn_start_output = 0;
 wire btn_stop_output = 0;
 wire sw_input_dec = 0;
 wire sw_output_dec = 0;
-wire sw_continuous_input = 0;
+wire sw_continuous_input = 1;
 wire sw_stop_after_output = 0;
 wire sw_automatic = 0;
 wire pnl_do_arr_c = 0;

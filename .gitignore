@@ -6,3 +6,5 @@
 *.vcd
 obj_*
 logs
+
+test
