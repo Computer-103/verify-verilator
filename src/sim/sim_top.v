@@ -21,12 +21,9 @@ wire sw_output_dec = 0;
 wire sw_continuous_input = 1;
 wire sw_stop_after_output = 0;
 wire sw_automatic = 0;
-wire pnl_do_arr_c = 0;
-wire [30:0]  pnl_arr_reg_c_value = 0;
-wire pnl_do_arr_strt = 0;
-wire [11:0]  pnl_arr_strt_value = 0;
-wire pnl_do_arr_sel = 0;
-wire [11:0]  pnl_arr_sel_value = 0;
+wire btn_do_arr_c = 0;
+wire btn_do_arr_strt = 0;
+wire btn_do_arr_sel = 0;
 
 // soc_top Outputs
 wire dev_input_rdy;
@@ -35,9 +32,9 @@ wire [ 4:0]  dev_output_data;
 wire pnl_input_active;
 wire pnl_output_active;
 wire [ 5:0]  pnl_op_code;
-wire [11:0]  pnl_strt_value;
-wire [11:0]  pnl_sel_value;
-wire [30:0]  pnl_reg_c_value;
+wire [11:0]  pnl_strt_value = u_soc_top.pnl_strt_value;
+wire [11:0]  pnl_sel_value = u_soc_top.pnl_sel_value;
+wire [30:0]  pnl_reg_c_value = u_soc_top.pnl_reg_c_value;
 wire [ 2:0]  pnl_pu_state;
 
 soc_top  u_soc_top (
@@ -57,12 +54,9 @@ soc_top  u_soc_top (
     .sw_continuous_input                    ( sw_continuous_input                     ),
     .sw_stop_after_output                   ( sw_stop_after_output                    ),
     .sw_automatic                           ( sw_automatic                            ),
-    .pnl_do_arr_c                           ( pnl_do_arr_c                            ),
-    .pnl_arr_reg_c_value                    ( pnl_arr_reg_c_value                     ),
-    .pnl_do_arr_strt                        ( pnl_do_arr_strt                         ),
-    .pnl_arr_strt_value                     ( pnl_arr_strt_value                      ),
-    .pnl_do_arr_sel                         ( pnl_do_arr_sel                          ),
-    .pnl_arr_sel_value                      ( pnl_arr_sel_value                       ),
+    .btn_do_arr_c                           ( btn_do_arr_c                            ),
+    .btn_do_arr_strt                        ( btn_do_arr_strt                         ),
+    .btn_do_arr_sel                         ( btn_do_arr_sel                          ),
 
     .dev_input_rdy                          ( dev_input_rdy                           ),
     .dev_output_rdy                         ( dev_output_rdy                          ),
@@ -70,9 +64,6 @@ soc_top  u_soc_top (
     .pnl_input_active                       ( pnl_input_active                        ),
     .pnl_output_active                      ( pnl_output_active                       ),
     .pnl_op_code                            ( pnl_op_code                             ),
-    .pnl_strt_value                         ( pnl_strt_value                          ),
-    .pnl_sel_value                          ( pnl_sel_value                           ),
-    .pnl_reg_c_value                        ( pnl_reg_c_value                         ),
     .pnl_pu_state                           ( pnl_pu_state                            )
 );
 

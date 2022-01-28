@@ -26,32 +26,28 @@ module soc_top (
     input  sw_stop_after_output,        // level
     input  sw_automatic,                // level
 
-    input  pnl_do_arr_c,                // pulse
-    input  [30:0] pnl_arr_reg_c_value,  // level
-
-    input  pnl_do_arr_strt,             // pulse
-    input  [11:0] pnl_arr_strt_value,   // level
-
-    input  pnl_do_arr_sel,              // pulse
-    input  [11:0] pnl_arr_sel_value,    // level
-
-    output pnl_input_active,            // level
-    output pnl_output_active,           // level
+    input  btn_do_arr_c,                // btn
+    input  btn_do_arr_strt,             // btn
+    input  btn_do_arr_sel,              // btn
 
     output [ 5:0] pnl_op_code,          // level
-    output [11:0] pnl_strt_value,       // level
-    output [11:0] pnl_sel_value,        // level
-    output [30:0] pnl_reg_c_value,      // level
-    output [ 2:0] pnl_pu_state          // level
+    output [ 2:0] pnl_pu_state,         // level
+
+    output pnl_input_active,            // level
+    output pnl_output_active            // level
+    
 );
 
 // pnl pulse
-wire  pnl_start_pulse;
-wire  pnl_clear_pu;
-wire  pnl_start_input;
-wire  pnl_stop_input; 
-wire  pnl_start_output;
-wire  pnl_stop_output;
+wire pnl_start_pulse;
+wire pnl_clear_pu;
+wire pnl_start_input;
+wire pnl_stop_input; 
+wire pnl_start_output;
+wire pnl_stop_output;
+wire pnl_do_arr_c;
+wire pnl_do_arr_strt;
+wire pnl_do_arr_sel;
 
 // pnl level
 wire pnl_input_dec;
@@ -59,6 +55,15 @@ wire pnl_output_dec;
 wire pnl_continuous_input;
 wire pnl_stop_after_output;
 wire pnl_automatic;
+
+// pnl serial
+wire [30:0] pnl_arr_reg_c_value = 31'o0;
+wire [11:0] pnl_arr_strt_value = 12'o0;
+wire [11:0] pnl_arr_sel_value = 12'o0;
+
+wire [30:0] pnl_reg_c_value;
+wire [11:0] pnl_strt_value;
+wire [11:0] pnl_sel_value;
 
 
 core_top  u_core_top (
@@ -126,6 +131,21 @@ button_pulse  stop_output_button_pulse (
     .clk    ( clk       ),  .resetn ( resetn    ),
     .btn    ( btn_stop_output                   ),
     .pulse  ( pnl_stop_output                   )
+);
+button_pulse  do_arr_c_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_do_arr_c                      ),
+    .pulse  ( pnl_do_arr_c                      )
+);
+button_pulse  do_arr_strt_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_do_arr_strt                   ),
+    .pulse  ( pnl_do_arr_strt                   )
+);
+button_pulse  do_arr_sel_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_do_arr_sel                    ),
+    .pulse  ( pnl_do_arr_sel                    )
 );
 
 switch_level  input_dec_switch_level (
