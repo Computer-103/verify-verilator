@@ -35,6 +35,9 @@ module soc_top (
     input  pnl_do_arr_sel,              // pulse
     input  [11:0] pnl_arr_sel_value,    // level
 
+    output pnl_input_active,            // level
+    output pnl_output_active,           // level
+
     output [ 5:0] pnl_op_code,          // level
     output [11:0] pnl_strt_value,       // level
     output [11:0] pnl_sel_value,        // level
@@ -85,6 +88,8 @@ core_top  u_core_top (
     .dev_input_rdy           ( dev_input_rdy            ),
     .dev_output_rdy          ( dev_output_rdy           ),
     .dev_output_data         ( dev_output_data          ),
+    .pnl_input_active        ( pnl_input_active         ),
+    .pnl_output_active       ( pnl_output_active        ),
     .pnl_op_code             ( pnl_op_code              ),
     .pnl_strt_value          ( pnl_strt_value           ),
     .pnl_sel_value           ( pnl_sel_value            ),

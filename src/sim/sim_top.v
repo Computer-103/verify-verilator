@@ -1,7 +1,9 @@
 module sim_top (
     input  clk,             // clk
     input  resetn,          // resetn
-    input  btn_start_input  // start_input
+    input  btn_start_input, // start_input
+
+    output machine_is_stop  // machine is stop
 );
 
 // soc_top Inputs]
@@ -30,6 +32,8 @@ wire [11:0]  pnl_arr_sel_value = 0;
 wire dev_input_rdy;
 wire dev_output_rdy;
 wire [ 4:0]  dev_output_data;
+wire pnl_input_active;
+wire pnl_output_active;
 wire [ 5:0]  pnl_op_code;
 wire [11:0]  pnl_strt_value;
 wire [11:0]  pnl_sel_value;
@@ -63,6 +67,8 @@ soc_top  u_soc_top (
     .dev_input_rdy                          ( dev_input_rdy                           ),
     .dev_output_rdy                         ( dev_output_rdy                          ),
     .dev_output_data                        ( dev_output_data                         ),
+    .pnl_input_active                       ( pnl_input_active                        ),
+    .pnl_output_active                      ( pnl_output_active                       ),
     .pnl_op_code                            ( pnl_op_code                             ),
     .pnl_strt_value                         ( pnl_strt_value                          ),
     .pnl_sel_value                          ( pnl_sel_value                           ),
@@ -87,5 +93,23 @@ sim_output  u_sim_output (
 
     .output_ack              ( dev_output_ack   )
 );
+
+reg  [7:0] stop_counter;
+always @(posedge clk) begin
+    if (~resetn) begin
+        stop_counter <= 8'h00;
+    end else if (pnl_pu_state == 3'o0) begin
+        if (stop_counter != 8'hff) begin
+            stop_counter <= stop_counter + 8'h01;
+        end
+    end else begin
+        stop_counter <= 8'h00;
+    end
+end
+
+assign machine_is_stop = 
+    stop_counter == 8'hff &&
+    !pnl_input_active &&
+    !pnl_output_active;
 
 endmodule
