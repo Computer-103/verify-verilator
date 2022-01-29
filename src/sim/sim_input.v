@@ -58,7 +58,7 @@ end
 always @(negedge clk) begin
     if (status_next[`READ]) begin
         $fread(tape_data, fp_read);
-        $display("READING TAPE %b\n", tape_data);
+        // $display("READING TAPE %b\n", tape_data);
     end
 end
 

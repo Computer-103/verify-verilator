@@ -58,7 +58,7 @@ end
 always @(negedge clk) begin
     if (status_next[`WRITE]) begin
         $fwrite(fp_write, "%c", tape_data);
-        $display("WRTING TAPE %b\n", tape_data);
+        // $display("WRTING TAPE %b\n", tape_data);
     end
 end
 

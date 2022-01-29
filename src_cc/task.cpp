@@ -114,7 +114,7 @@ void Task::do_task(long context_time) {
         top->sw_automatic = cur_task_data[0];
     }
 
-    std::cout << "doing task: " << cur_task_type << std::endl;
+    // std::cout << "doing task: " << cur_task_type << std::endl;
 }
 
 void Task::get_new_task(long context_time) {
@@ -211,7 +211,7 @@ void Task::get_new_task(long context_time) {
     }
 
     std::cout << "get task: " << type_name << std::endl;
-    std::cout << "now task: " << cur_task_type << std::endl;
+    // std::cout << "now task: " << cur_task_type << std::endl;
 
     cur_task_start_time = context_time;
 }
