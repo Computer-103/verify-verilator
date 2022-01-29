@@ -1,7 +1,20 @@
 module sim_top (
     input  clk,             // clk
     input  resetn,          // resetn
+    input  btn_start_pulse,
+    input  btn_clear_pu,
     input  btn_start_input, // start_input
+    input  btn_stop_input,
+    input  btn_start_output,
+    input  btn_stop_output,
+    input  sw_input_dec,
+    input  sw_output_dec,
+    input  sw_continuous_input,
+    input  sw_stop_after_output,
+    input  sw_automatic,
+    input  btn_do_arr_c,
+    input  btn_do_arr_strt,
+    input  btn_do_arr_sel,
 
     output machine_is_stop  // machine is stop
 );
@@ -10,20 +23,6 @@ module sim_top (
 wire dev_input_val;
 wire dev_output_ack;
 wire [ 4:0]  dev_input_data;
-wire btn_start_pulse = 0;
-wire btn_clear_pu = 0;
-// wire btn_start_input = 0;
-wire btn_stop_input = 0;
-wire btn_start_output = 0;
-wire btn_stop_output = 0;
-wire sw_input_dec = 0;
-wire sw_output_dec = 0;
-wire sw_continuous_input = 1;
-wire sw_stop_after_output = 0;
-wire sw_automatic = 0;
-wire btn_do_arr_c = 0;
-wire btn_do_arr_strt = 0;
-wire btn_do_arr_sel = 0;
 
 // soc_top Outputs
 wire dev_input_rdy;

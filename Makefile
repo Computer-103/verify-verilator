@@ -46,7 +46,7 @@ VERILATOR_FLAGS += -y src/soc
 VERILATOR_FLAGS += -y src/sim
 
 # Input files for Verilator
-VERILATOR_INPUT = -f input.vc src/sim/sim_top.v src_cc/main.cpp
+VERILATOR_INPUT = -f input.vc src/sim/sim_top.v src_cc/main.cpp src_cc/task.cpp
 
 ######################################################################
 default: all
@@ -88,6 +88,9 @@ coverage:
 
 ######################################################################
 # Other targets
+
+wave:
+	gtkwave logs/vlt_dump.vcd -a wave.gtkw
 
 help:
 	@echo "-- Make help for Computer 103 Soc --"

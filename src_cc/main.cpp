@@ -5,6 +5,8 @@
 #include <verilated_vcd_c.h>
 #include "Vsim_top.h"
 
+#include "task.h"
+
 int main(int argc, char** argv, char** env) {
 
     // Prevent unused variable warnings
@@ -13,11 +15,12 @@ int main(int argc, char** argv, char** env) {
     // Create logs/ directory in case we have traces to put under it
     Verilated::mkdir("logs");
 
-    // Using unique_ptr is similar to
+    // Construct context class
     const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
-
-    // Construct the Verilated model, from Vtop.h generated from Verilating "top.v".
+    // Construct the Verilated model
     const std::unique_ptr<Vsim_top> top{new Vsim_top{contextp.get(), "TOP"}};
+    // Construct trace save object
+    const std::unique_ptr<VerilatedVcdC> trace_p{new VerilatedVcdC};
 
     // Set debug level, 0 is off, 9 is highest presently used
     contextp->debug(0);
@@ -27,46 +30,54 @@ int main(int argc, char** argv, char** env) {
 
     // Verilator must compute traced signals
     contextp->traceEverOn(true);
-    VerilatedVcdC * trace_p = new VerilatedVcdC;
-    top->trace(trace_p, 99);
+    top->trace(trace_p.get(), 99);
     trace_p->open("logs/vlt_dump.vcd");
 
     contextp->commandArgs(argc, argv);
 
+    // inital value of signals
     top->resetn = !0;
     top->clk = 0;
 
-    long sim_time = 1000000;
-    long base_time = 0;
+    top->btn_start_pulse = 0;
+    top->btn_clear_pu = 0;
+    top->btn_start_input = 0;
+    top->btn_stop_input = 0;
+    top->btn_start_output = 0;
+    top->btn_stop_output = 0;
+    top->sw_input_dec = 0;
+    top->sw_output_dec = 0;
+    top->sw_continuous_input = 0;
+    top->sw_stop_after_output = 0;
+    top->sw_automatic = 0;
+    top->btn_do_arr_c = 0;
+    top->btn_do_arr_strt = 0;
+    top->btn_do_arr_sel = 0;
+
+    // initial task
+    const std::unique_ptr<Task> task_p{new Task(top.get())};
 
     // Simulate until $finish
-    while (!contextp->gotFinish()) {
+    while (!contextp->gotFinish() && !task_p->is_finished()) {
 
         contextp->timeInc(1);  // 1 timeprecision period passes...
 
         top->clk = !top->clk;
+        
+        // reset
+        if (contextp->time() > 1 && contextp->time() < 8) {
+            top->resetn = !1;  // Assert reset
+        } else {
+            top->resetn = !0;  // Deassert reset
+        }
 
         if (!top->clk) {        // do operation at negedge
-            // set reset
-            if (contextp->time() > 1 && contextp->time() < 10) {
-                top->resetn = !1;  // Assert reset
-            } else {
-                top->resetn = !0;  // Deassert reset
-            }
-            
-            // set start input
-            if (contextp->time() > 16 && contextp->time() < 20) {
-                top->btn_start_input = 1;
-            } else {
-                top->btn_start_input = 0;
-            }
-
-            if (top->machine_is_stop) {
-                break;
-            }
+            task_p->check_done(contextp->time());
+            task_p->do_task(contextp->time());
         }
-        if (contextp->time() % 10000 == 0) {
-            std::cout << contextp->time() << std::endl;
+
+        if (contextp->time() % 100 == 0) {
+            std::cout << "==== cur_time: " << contextp->time() << std::endl;
         }
 
         // Evaluate model
@@ -78,6 +89,5 @@ int main(int argc, char** argv, char** env) {
     top->final();
     trace_p->close();
 
-    delete trace_p;
     return 0;
 }
