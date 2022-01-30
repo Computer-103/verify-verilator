@@ -8,6 +8,7 @@ enum task_type {
     IDLE,
     ARR_REG_C,
     ARR_STRT,
+    CLEAR_STRT,
     ARR_SEL,
     START_PULSE,
     CLEAR_PULSE,

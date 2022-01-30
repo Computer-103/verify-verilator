@@ -52,22 +52,35 @@ void Task::do_task(long context_time) {
     if (cur_task_type == IDLE) {
 
     } else if (cur_task_type == ARR_REG_C) {
-        if (t_time > 1 && t_time < 6) {
+        top->sw_allow_arr = 1;
+        top->sw_arr_reg_c_value = cur_task_data[0];
+        if (t_time > 128 && t_time < 135) {
             top->btn_do_arr_c = 1;
         } else {
             top->btn_do_arr_c = 0;
         }
     } else if (cur_task_type == ARR_STRT) {
-        if (t_time > 1 && t_time < 6) {
+        top->sw_allow_arr = 1;
+        top->sw_arr_strt_value = cur_task_data[0];
+        if (t_time > 128 && t_time < 135) {
             top->btn_do_arr_strt = 1;
         } else {
             top->btn_do_arr_strt = 0;
         }
     } else if (cur_task_type == ARR_SEL) {
-        if (t_time > 1 && t_time < 6) {
+        top->sw_allow_arr = 1;
+        top->sw_arr_sel_value = cur_task_data[0];
+        if (t_time > 128 && t_time < 135) {
             top->btn_do_arr_sel = 1;
         } else {
             top->btn_do_arr_sel = 0;
+        }
+    } else if (cur_task_type == CLEAR_STRT) {
+        top->sw_allow_arr = 0;
+        if (t_time > 3 && t_time < 8) {
+            top->btn_do_arr_strt = 1;
+        } else {
+            top->btn_do_arr_strt = 0;
         }
     } else if (cur_task_type == START_PULSE) {
         if (t_time > 1 && t_time < 6) {
@@ -160,6 +173,9 @@ void Task::get_new_task(long context_time) {
             return;
         }
         cur_task_data.push_back(temp1);
+
+    } else if (type_name == "clear_strt") {
+        cur_task_type = CLEAR_STRT;
 
     } else if (type_name == "start_pulse") {
         cur_task_type = START_PULSE;
