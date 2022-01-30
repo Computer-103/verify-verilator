@@ -84,6 +84,9 @@ int main(int argc, char** argv, char** env) {
         top->eval();
         trace_p->dump(contextp->time());
     }
+    
+    // Coverage analysis (calling write only after the test is known to pass)
+    contextp->coveragep()->write("logs/coverage.dat");
 
     // Final model cleanup
     top->final();
