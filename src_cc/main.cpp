@@ -76,7 +76,7 @@ int main(int argc, char** argv, char** env) {
             task_p->do_task(contextp->time());
         }
 
-        if (contextp->time() % 1000 == 0) {
+        if (contextp->time() % 100000 == 0) {
             std::cout << "==== cur_time: " << contextp->time() << std::endl;
         }
 
