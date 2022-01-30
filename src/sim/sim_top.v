@@ -85,10 +85,14 @@ sim_output  u_sim_output (
 );
 
 reg  [7:0] stop_counter;
+reg  [2:0] last_pu_state;
+always @(posedge clk) begin
+    last_pu_state <= pnl_pu_state;
+end
 always @(posedge clk) begin
     if (~resetn) begin
         stop_counter <= 8'h00;
-    end else if (pnl_pu_state == 3'o0) begin
+    end else if (pnl_pu_state == last_pu_state) begin
         if (stop_counter != 8'hff) begin
             stop_counter <= stop_counter + 8'h01;
         end
