@@ -23,7 +23,7 @@ always @(posedge SRCLK) begin
     end
 end
 
-assign Q = OEn ? 8'hxx : storage_reg;
-assign QH = storage_reg[7];
+assign Q = OEn ? 8'h0 : storage_reg;
+assign QH = shift_reg[7];
 
 endmodule

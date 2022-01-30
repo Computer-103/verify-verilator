@@ -30,8 +30,14 @@ module soc_top (
     input  btn_do_arr_strt,             // btn
     input  btn_do_arr_sel,              // btn
 
-    output [ 5:0] pnl_op_code,          // level
     output [ 2:0] pnl_pu_state,         // level
+
+    output serial_out_rclk,
+    output serial_out_srclk,
+    output serial_out_ser_0,
+    output serial_out_ser_1,
+    output serial_out_ser_2,
+    output serial_out_ser_3,
 
     output pnl_input_active,            // level
     output pnl_output_active            // level
@@ -62,9 +68,12 @@ wire [11:0] pnl_arr_strt_value = 12'o0;
 wire [11:0] pnl_arr_sel_value = 12'o0;
 
 wire [30:0] pnl_reg_c_value;
+wire [ 5:0] pnl_op_code;
 wire [11:0] pnl_strt_value;
 wire [11:0] pnl_sel_value;
 
+wire [31:0] serial_line_0;
+wire [31:0] serial_line_1;
 
 core_top  u_core_top (
     .clk                     ( clk                      ),
@@ -172,6 +181,18 @@ switch_level  automatic_switch_level (
     .clk    ( clk       ),  .resetn ( resetn    ),
     .sw     ( sw_automatic                      ),
     .level  ( pnl_automatic                     )
+);
+
+assign serial_line_0 = { 1'b0, pnl_reg_c_value[30:0] };
+assign serial_line_1 = { 2'b0, pnl_op_code[5:0], pnl_strt_value[11:0], pnl_sel_value[11:0] };
+
+driver_74lv595 u_driver_74lv595 (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .data_0 (serial_line_0[15:0]),  .data_1 (serial_line_0[31:16]),
+    .data_2 (serial_line_1[15:0]),  .data_3 (serial_line_1[31:16]),
+    .RCLK   ( serial_out_rclk   ),  .SRCLK  ( serial_out_srclk  ),
+    .SER_0  ( serial_out_ser_0  ),  .SER_1  ( serial_out_ser_1  ),
+    .SER_2  ( serial_out_ser_2  ),  .SER_3  ( serial_out_ser_3  )
 );
 
 endmodule

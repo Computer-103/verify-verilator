@@ -30,40 +30,77 @@ wire dev_output_rdy;
 wire [ 4:0]  dev_output_data;
 wire pnl_input_active;
 wire pnl_output_active;
-wire [ 5:0]  pnl_op_code;
+wire [ 5:0]  pnl_op_code = u_soc_top.pnl_op_code;
 wire [11:0]  pnl_strt_value = u_soc_top.pnl_strt_value;
 wire [11:0]  pnl_sel_value = u_soc_top.pnl_sel_value;
 wire [30:0]  pnl_reg_c_value = u_soc_top.pnl_reg_c_value;
 wire [ 2:0]  pnl_pu_state;
 
-soc_top  u_soc_top (
-    .clk                                    ( clk                                     ),
-    .resetn                                 ( resetn                                  ),
-    .dev_input_val                          ( dev_input_val                           ),
-    .dev_output_ack                         ( dev_output_ack                          ),
-    .dev_input_data                         ( dev_input_data                          ),
-    .btn_start_pulse                        ( btn_start_pulse                         ),
-    .btn_clear_pu                           ( btn_clear_pu                            ),
-    .btn_start_input                        ( btn_start_input                         ),
-    .btn_stop_input                         ( btn_stop_input                          ),
-    .btn_start_output                       ( btn_start_output                        ),
-    .btn_stop_output                        ( btn_stop_output                         ),
-    .sw_input_dec                           ( sw_input_dec                            ),
-    .sw_output_dec                          ( sw_output_dec                           ),
-    .sw_continuous_input                    ( sw_continuous_input                     ),
-    .sw_stop_after_output                   ( sw_stop_after_output                    ),
-    .sw_automatic                           ( sw_automatic                            ),
-    .btn_do_arr_c                           ( btn_do_arr_c                            ),
-    .btn_do_arr_strt                        ( btn_do_arr_strt                         ),
-    .btn_do_arr_sel                         ( btn_do_arr_sel                          ),
+wire serial_out_rclk;
+wire serial_out_srclk;
+wire serial_out_ser_0;
+wire serial_out_ser_1;
+wire serial_out_ser_2;
+wire serial_out_ser_3;
 
-    .dev_input_rdy                          ( dev_input_rdy                           ),
-    .dev_output_rdy                         ( dev_output_rdy                          ),
-    .dev_output_data                        ( dev_output_data                         ),
-    .pnl_input_active                       ( pnl_input_active                        ),
-    .pnl_output_active                      ( pnl_output_active                       ),
-    .pnl_op_code                            ( pnl_op_code                             ),
-    .pnl_pu_state                           ( pnl_pu_state                            )
+wire [ 5:0]  serial_op_code;
+wire [11:0]  serial_strt_value;
+wire [11:0]  serial_sel_value;
+wire [30:0]  serial_reg_c_value;
+
+wire [ 7:0] serial_line_0_0;
+wire [ 7:0] serial_line_0_1;
+wire [ 7:0] serial_line_0_2;
+wire [ 7:0] serial_line_0_3;
+wire [ 7:0] serial_line_1_0;
+wire [ 7:0] serial_line_1_1;
+wire [ 7:0] serial_line_1_2;
+wire [ 7:0] serial_line_1_3;
+
+wire serial_cascade_0;
+wire serial_cascade_1;
+wire serial_cascade_2;
+wire serial_cascade_3;
+wire serial_no_0;
+wire serial_no_1;
+wire serial_no_2;
+wire serial_no_3;
+wire serial_no_4;
+wire [1:0] serial_no_5;
+
+soc_top  u_soc_top (
+    .clk                         ( clk                          ),
+    .resetn                      ( resetn                       ),
+    .dev_input_val               ( dev_input_val                ),
+    .dev_output_ack              ( dev_output_ack               ),
+    .dev_input_data              ( dev_input_data               ),
+    .btn_start_pulse             ( btn_start_pulse              ),
+    .btn_clear_pu                ( btn_clear_pu                 ),
+    .btn_start_input             ( btn_start_input              ),
+    .btn_stop_input              ( btn_stop_input               ),
+    .btn_start_output            ( btn_start_output             ),
+    .btn_stop_output             ( btn_stop_output              ),
+    .sw_input_dec                ( sw_input_dec                 ),
+    .sw_output_dec               ( sw_output_dec                ),
+    .sw_continuous_input         ( sw_continuous_input          ),
+    .sw_stop_after_output        ( sw_stop_after_output         ),
+    .sw_automatic                ( sw_automatic                 ),
+    .btn_do_arr_c                ( btn_do_arr_c                 ),
+    .btn_do_arr_strt             ( btn_do_arr_strt              ),
+    .btn_do_arr_sel              ( btn_do_arr_sel               ),
+
+    .dev_input_rdy               ( dev_input_rdy                ),
+    .dev_output_rdy              ( dev_output_rdy               ),
+    .dev_output_data             ( dev_output_data              ),
+    .pnl_input_active            ( pnl_input_active             ),
+    .pnl_output_active           ( pnl_output_active            ),
+    .pnl_pu_state                ( pnl_pu_state                 ),
+    .serial_out_rclk             ( serial_out_rclk              ),
+    .serial_out_srclk            ( serial_out_srclk             ),
+    .serial_out_ser_0            ( serial_out_ser_0             ),
+    .serial_out_ser_1            ( serial_out_ser_1             ),
+    .serial_out_ser_2            ( serial_out_ser_2             ),
+    .serial_out_ser_3            ( serial_out_ser_3             )
 );
 
 sim_input  u_sim_input (
@@ -83,6 +120,96 @@ sim_output  u_sim_output (
 
     .output_ack              ( dev_output_ack   )
 );
+
+chip_74lv595  u_chip_74lv595_0_0 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_out_ser_0     ),
+
+    .Q                       ( serial_line_0_0  ),
+    .QH                      ( serial_cascade_0     )
+);
+
+chip_74lv595  u_chip_74lv595_0_1 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_cascade_0     ),
+
+    .Q                       ( serial_line_0_1      ),
+    .QH                      ( serial_no_0          )
+);
+
+chip_74lv595  u_chip_74lv595_1_0 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_out_ser_1     ),
+
+    .Q                       ( serial_line_0_2      ),
+    .QH                      ( serial_cascade_1     )
+);
+chip_74lv595  u_chip_74lv595_1_1 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_cascade_1     ),
+
+    .Q                       ( serial_line_0_3      ),
+    .QH                      ( serial_no_1          )
+);
+
+chip_74lv595  u_chip_74lv595_2_0 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_out_ser_2     ),
+
+    .Q                       ( serial_line_1_0      ),
+    .QH                      ( serial_cascade_2     )
+);
+chip_74lv595  u_chip_74lv595_2_1 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_cascade_2     ),
+
+    .Q                       ( serial_line_1_1      ),
+    .QH                      ( serial_no_2          )
+);
+
+chip_74lv595  u_chip_74lv595_3_0 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_out_ser_3     ),
+
+    .Q                       ( serial_line_1_2      ),
+    .QH                      ( serial_cascade_3     )
+);
+chip_74lv595  u_chip_74lv595_3_1 (
+    .OEn                     ( 1'b0                 ),
+    .RCLK                    ( serial_out_rclk      ),
+    .SRCLK                   ( serial_out_srclk     ),
+    .SRCLRn                  ( 1'b1                 ),
+    .SER                     ( serial_cascade_3     ),
+
+    .Q                       ( serial_line_1_3      ),
+    .QH                      ( serial_no_3          )
+);
+
+assign serial_reg_c_value[30:0] = 
+    {serial_line_0_3[6:0], serial_line_0_2, serial_line_0_1, serial_line_0_0};
+assign {serial_op_code[5:0], serial_strt_value[11:0], serial_sel_value[11:0]} = 
+    {serial_line_1_3[5:0], serial_line_1_2, serial_line_1_1, serial_line_1_0};
 
 reg  [7:0] stop_counter;
 reg  [2:0] last_pu_state;
