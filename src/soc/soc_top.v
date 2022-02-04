@@ -14,6 +14,9 @@ module soc_top (
     input  btn_start_pulse,             // btn
     input  btn_clear_pu,                // btn
 
+    input  btn_mem_read,                // btn
+    input  btn_mem_write,               // btn
+
     input  btn_start_input,             // btn
     input  btn_stop_input,              // btn
     input  btn_start_output,            // btn
@@ -56,6 +59,8 @@ module soc_top (
 // pnl pulse
 wire pnl_start_pulse;
 wire pnl_clear_pu;
+wire pnl_mem_read;
+wire pnl_mem_write;
 wire pnl_start_input;
 wire pnl_stop_input; 
 wire pnl_start_output;
@@ -103,6 +108,8 @@ core_top  u_core_top (
     .pnl_start_pulse         ( pnl_start_pulse          ),
     .pnl_clear_pu            ( pnl_clear_pu             ),
     .pnl_automatic           ( pnl_automatic            ),
+    .pnl_mem_read            ( pnl_mem_read             ),
+    .pnl_mem_write           ( pnl_mem_write            ),
     .pnl_start_input         ( pnl_start_input          ),
     .pnl_stop_input          ( pnl_stop_input           ),
     .pnl_start_output        ( pnl_start_output         ),
@@ -139,6 +146,16 @@ button_pulse  clear_pu_button_pulse (
     .clk    ( clk       ),  .resetn ( resetn    ),
     .btn    ( btn_clear_pu                      ),
     .pulse  ( pnl_clear_pu                      )
+);
+button_pulse  mem_read_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_mem_read                      ),
+    .pulse  ( pnl_mem_read                      )
+);
+button_pulse  mem_write_button_pulse (
+    .clk    ( clk       ),  .resetn ( resetn    ),
+    .btn    ( btn_mem_write                     ),
+    .pulse  ( pnl_mem_write                     )
 );
 button_pulse  start_input_button_pulse (
     .clk    ( clk       ),  .resetn ( resetn    ),

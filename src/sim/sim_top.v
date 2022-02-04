@@ -3,6 +3,8 @@ module sim_top (
     input  resetn,          // resetn
     input  btn_start_pulse,
     input  btn_clear_pu,
+    input  btn_mem_read,
+    input  btn_mem_write,
     input  btn_start_input, // start_input
     input  btn_stop_input,
     input  btn_start_output,
@@ -95,6 +97,8 @@ soc_top  u_soc_top (
     .dev_input_data              ( dev_input_data               ),
     .btn_start_pulse             ( btn_start_pulse              ),
     .btn_clear_pu                ( btn_clear_pu                 ),
+    .btn_mem_read                ( btn_mem_read                 ),
+    .btn_mem_write               ( btn_mem_write                ),
     .btn_start_input             ( btn_start_input              ),
     .btn_stop_input              ( btn_stop_input               ),
     .btn_start_output            ( btn_start_output             ),

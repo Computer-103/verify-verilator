@@ -41,6 +41,8 @@ int main(int argc, char** argv, char** env) {
 
     top->btn_start_pulse = 0;
     top->btn_clear_pu = 0;
+    top->btn_mem_read = 0;
+    top->btn_mem_write = 0;
     top->btn_start_input = 0;
     top->btn_stop_input = 0;
     top->btn_start_output = 0;

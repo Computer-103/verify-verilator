@@ -12,6 +12,8 @@ enum task_type {
     ARR_SEL,
     START_PULSE,
     CLEAR_PULSE,
+    MEM_READ,
+    MEM_WRITE,
     START_INPUT,
     STOP_INPUT,
     START_OUTPUT,

@@ -94,6 +94,18 @@ void Task::do_task(long context_time) {
         } else {
             top->btn_clear_pu = 0;
         }
+    } else if (cur_task_type == MEM_READ) {
+        if (t_time > 1 && t_time < 6) {
+            top->btn_mem_read = 1;
+        } else {
+            top->btn_mem_read = 0;
+        }
+    } else if (cur_task_type == MEM_WRITE) {
+        if (t_time > 1 && t_time < 6) {
+            top->btn_mem_write = 1;
+        } else {
+            top->btn_mem_write = 0;
+        }
     } else if (cur_task_type == START_INPUT) {
         if (t_time > 1 && t_time < 6) {
             top->btn_start_input = 1;
@@ -182,6 +194,12 @@ void Task::get_new_task(long context_time) {
 
     } else if (type_name == "clear_pulse") {
         cur_task_type = CLEAR_PULSE;
+        
+    } else if (type_name == "mem_read") {
+        cur_task_type = MEM_READ;
+
+    } else if (type_name == "mem_write") {
+        cur_task_type = MEM_WRITE;
         
     } else if (type_name == "start_input") {
         cur_task_type = START_INPUT;
