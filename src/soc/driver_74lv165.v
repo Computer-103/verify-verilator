@@ -16,10 +16,11 @@ module driver_74lv165 (
     input  QH_3             // serial output
 );
 
+reg serial_clk;
 reg shift_clk;
 reg shiftn_load;
 
-reg [ 3:0] cnt;
+reg [ 4:0] cnt;
 
 reg [15:0] data_0_r;
 reg [15:0] data_1_r;
@@ -33,20 +34,34 @@ reg [15:0] data_3_s;
 
 always @(posedge clk) begin
     if (~resetn) begin
-        shift_clk <= 1'b0;
+        serial_clk <= 1'b0;
     end else begin
-        shift_clk <= ~shift_clk;
+        serial_clk <= ~serial_clk;
     end
 end
 
 always @(posedge clk) begin
     if (~resetn) begin
-        cnt <= 4'd0;
-    end else if (!shift_clk) begin
-        if (cnt == 4'd15) begin
-            cnt <= 4'd0;
+        cnt <= 5'd0;
+    end else if (!serial_clk) begin
+        if (cnt == 5'd16) begin
+            cnt <= 5'd0;
         end else begin
-            cnt <= cnt + 4'd1;
+            cnt <= cnt + 5'd1;
+        end
+    end
+end
+
+always @(posedge clk) begin
+    if (~resetn) begin
+        shift_clk <= 1'b0;
+    end else if (serial_clk) begin
+        shift_clk <= 1'b0;
+    end else begin
+        if (cnt == 5'd16) begin
+            shift_clk <= 1'b0;
+        end else begin
+            shift_clk <= 1'b1;
         end
     end
 end
@@ -54,10 +69,10 @@ end
 always @(posedge clk) begin
     if (~resetn) begin
         shiftn_load <= 1'b0;
-    end else if (shift_clk) begin
+    end else if (serial_clk) begin
         shiftn_load <= 1'b0;
-    end else if (!shift_clk) begin
-        if (cnt == 4'd15) begin
+    end else begin
+        if (cnt == 5'd16) begin
             shiftn_load <= 1'b1;
         end else begin
             shiftn_load <= 1'b0;
@@ -71,13 +86,11 @@ always @(posedge clk) begin
         data_1_r <= 16'd0;
         data_2_r <= 16'd0;
         data_3_r <= 16'd0;
-    end else if (!shift_clk) begin
-        if (cnt == 4'd0) begin
-            data_0_r <= data_0_s;
-            data_1_r <= data_1_s;
-            data_2_r <= data_2_s;
-            data_3_r <= data_3_s;
-        end
+    end else if (!serial_clk && cnt == 5'd16) begin
+        data_0_r <= data_0_s;
+        data_1_r <= data_1_s;
+        data_2_r <= data_2_s;
+        data_3_r <= data_3_s;
     end
 end
 
@@ -87,7 +100,7 @@ always @(posedge clk) begin
         data_1_s <= 16'd0;
         data_2_s <= 16'd0;
         data_3_s <= 16'd0;
-    end else if (!shift_clk) begin
+    end else if (!serial_clk && cnt != 5'd16) begin
         data_0_s <= {data_0_s[14:0], QH_0};
         data_1_s <= {data_1_s[14:0], QH_1};
         data_2_s <= {data_2_s[14:0], QH_2};
