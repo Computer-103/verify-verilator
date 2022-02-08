@@ -14,6 +14,8 @@ module sim_top (
     input  sw_continuous_input,
     input  sw_stop_after_output,
     input  sw_automatic,
+    input  sw_stop_at_cmp,
+    input  sw_cmp_with_strt,
     input  sw_allow_arr,
     input  btn_do_arr_c,
     input  btn_do_arr_strt,
@@ -22,6 +24,7 @@ module sim_top (
     input  [30:0] sw_arr_reg_c_value,
     input  [11:0] sw_arr_strt_value,
     input  [11:0] sw_arr_sel_value,
+    input  [11:0] sw_arr_cmp_value,
 
     output machine_is_stop  // machine is stop
 );
@@ -75,14 +78,17 @@ wire serial_in_ser_0;
 wire serial_in_ser_1;
 wire serial_in_ser_2;
 wire serial_in_ser_3;
+wire serial_in_ser_4;
 wire [15:0] serial_in_0;
 wire [15:0] serial_in_1;
 wire [15:0] serial_in_2;
 wire [15:0] serial_in_3;
+wire [15:0] serial_in_4;
 wire serial_in_cascade_0;
 wire serial_in_cascade_1;
 wire serial_in_cascade_2;
 wire serial_in_cascade_3;
+wire serial_in_cascade_4;
 
 wire serial_no_0;
 wire serial_no_1;
@@ -108,6 +114,8 @@ soc_top  u_soc_top (
     .sw_continuous_input         ( sw_continuous_input          ),
     .sw_stop_after_output        ( sw_stop_after_output         ),
     .sw_automatic                ( sw_automatic                 ),
+    .sw_stop_at_cmp              ( sw_stop_at_cmp               ),
+    .sw_cmp_with_strt            ( sw_cmp_with_strt             ),
     .sw_allow_arr                ( sw_allow_arr                 ),
     .btn_do_arr_c                ( btn_do_arr_c                 ),
     .btn_do_arr_strt             ( btn_do_arr_strt              ),
@@ -130,7 +138,8 @@ soc_top  u_soc_top (
     .serial_in_ser_0             ( serial_in_ser_0              ),
     .serial_in_ser_1             ( serial_in_ser_1              ),
     .serial_in_ser_2             ( serial_in_ser_2              ),
-    .serial_in_ser_3             ( serial_in_ser_3              )
+    .serial_in_ser_3             ( serial_in_ser_3              ),
+    .serial_in_ser_4             ( serial_in_ser_4              )
 );
 
 sim_input  u_sim_input (
@@ -317,10 +326,31 @@ chip_74lv165 u_chip_74lv165_3_1 (
     .QH                      ( serial_in_ser_3      )
 );
 
+chip_74lv165 u_chip_74lv165_4_0 (
+    .CLK                     ( serial_in_rclk       ),
+    .CLK_INH                 ( 1'b0                 ),
+    .SH_LDn                  ( serial_in_shldn      ),
+    .SER                     ( 1'b0                 ),
+
+    .D                       ( serial_in_4[7:0]     ),
+    .QH                      ( serial_in_cascade_4  )
+);
+chip_74lv165 u_chip_74lv165_4_1 (
+    .CLK                     ( serial_in_rclk       ),
+    .CLK_INH                 ( 1'b0                 ),
+    .SH_LDn                  ( serial_in_shldn      ),
+    .SER                     ( serial_in_cascade_4  ),
+
+    .D                       ( serial_in_4[15:8]    ),
+    .QH                      ( serial_in_ser_4      )
+);
+
 assign {serial_in_1, serial_in_0} =
     {1'b0, sw_arr_reg_c_value};
 assign {serial_in_3, serial_in_2} =
     {8'b0, sw_arr_strt_value, sw_arr_sel_value};
+assign {serial_in_4} =
+    {4'b0, sw_arr_cmp_value};
 
 reg  [7:0] stop_counter;
 reg  [2:0] last_pu_state;

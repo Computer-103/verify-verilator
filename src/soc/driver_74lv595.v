@@ -9,10 +9,11 @@ module driver_74lv595 (
 
     output RCLK,            // storage register clock
     output SRCLK,           // shift register clock
-    output SER_0,           // serial input
-    output SER_1,           // serial input
-    output SER_2,           // serial input
-    output SER_3            // serial input
+
+    output SER_0,           // serial output
+    output SER_1,           // serial output
+    output SER_2,           // serial output
+    output SER_3            // serial output
 );
 
 reg serial_clk;

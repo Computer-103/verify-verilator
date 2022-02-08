@@ -52,6 +52,9 @@ int main(int argc, char** argv, char** env) {
     top->sw_continuous_input = 0;
     top->sw_stop_after_output = 0;
     top->sw_automatic = 0;
+    top->sw_stop_at_cmp = 0;
+    top->sw_cmp_with_strt = 0;
+    top->sw_allow_arr = 0;
     top->btn_do_arr_c = 0;
     top->btn_do_arr_strt = 0;
     top->btn_do_arr_sel = 0;

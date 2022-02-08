@@ -75,6 +75,9 @@ void Task::do_task(long context_time) {
         } else {
             top->btn_do_arr_sel = 0;
         }
+    }  else if (cur_task_type == ARR_CMP) {
+        top->sw_allow_arr = 1;
+        top->sw_arr_cmp_value = cur_task_data[0];
     } else if (cur_task_type == CLEAR_STRT) {
         top->sw_allow_arr = 0;
         if (t_time > 3 && t_time < 8) {
@@ -137,6 +140,8 @@ void Task::do_task(long context_time) {
         top->sw_stop_after_output = cur_task_data[3];
     } else if (cur_task_type == SET_MAIN_SW) {
         top->sw_automatic = cur_task_data[0];
+        top->sw_stop_at_cmp = cur_task_data[1];
+        top->sw_cmp_with_strt = cur_task_data[2];
     }
 
     // std::cout << "doing task: " << cur_task_type << std::endl;
@@ -178,6 +183,16 @@ void Task::get_new_task(long context_time) {
         
     } else if (type_name == "arr_sel") {
         cur_task_type = ARR_SEL;
+        cur_task_data.clear();
+        res = fscanf(seq_file, "%o", &temp1);
+        if (res != 1) {
+            finished = true;
+            return;
+        }
+        cur_task_data.push_back(temp1);
+
+    }  else if (type_name == "arr_cmp") {
+        cur_task_type = ARR_CMP;
         cur_task_data.clear();
         res = fscanf(seq_file, "%o", &temp1);
         if (res != 1) {
@@ -229,12 +244,14 @@ void Task::get_new_task(long context_time) {
     } else if (type_name == "set_main_sw") {
         cur_task_type = SET_MAIN_SW;
         cur_task_data.clear();
-        res = fscanf(seq_file, "%d", &temp1);
-        if (res != 1) {
+        res = fscanf(seq_file, "%d%d%d", &temp1, &temp2, &temp3);
+        if (res != 3) {
             finished = true;
             return;
         }
         cur_task_data.push_back(temp1);
+        cur_task_data.push_back(temp2);
+        cur_task_data.push_back(temp3);
 
     }
     res = fscanf(seq_file, "%ld%d", &cur_task_dur, &temp1);
