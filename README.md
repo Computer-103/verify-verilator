@@ -9,14 +9,9 @@
 ├── obj.mk      # 构建脚本补充
 ├── input.vc    # 构建脚本补充参数
 ├── README.md   # 本文档
-├── src         # Verilog HDL 源码
-│   ├── core        # 内核部分 Verilog HDL 源码, Computer-103/103-core
-│   │               # 顶层模块为 top_core
-│   ├── soc         # SoC 部分 Verilog HDL 源码
-│   │               # 顶层模块为 top_soc         
-│   └── sim         # 仿真框架 Verilog 部分
-│                   # 顶层模块为 top_sim
-├── src_cc      # Verilator 仿真用 C++ 源码
+├── src_hw      # 硬件设计源码，Verilog HDL
+├── src_tb      # 验证测试台，Verilog HDL
+├── src_cc      # Verilator 仿真程序，C++
 ├── test        # 测试文件存放目录，需手动放置
 │   ├── input.bin
 │   ├── output.bin
@@ -27,10 +22,10 @@
 ## 仿真
 将仓库克隆到本地，并获取子模块：
 ```
-git clone --recurse-submodules git@github.com:Computer-103/103-SoC.git
+git clone --recurse-submodules git@github.com:Computer-103/verify-verilator.git
 ```
 
-从 [Computer-103/103-program](https://github.com/Computer-103/103-program) 获取测试程序 `input.bin` 和 `task.seq`，放置于 `test/` 目录下。
+从 [Computer-103/test-program](https://github.com/Computer-103/test-program) 获取测试程序 `input.bin` 和 `task.seq`，放置于 `test/` 目录下。
 
 编译、链接、运行，一气呵成：
 ```
