@@ -46,7 +46,7 @@ VERILATOR_FLAGS += -y src_hw/include
 VERILATOR_FLAGS += -y src_tb
 
 # Input files for Verilator
-VERILATOR_INPUT = -f input.vc src_hw/sim_top.v src_cc/main.cpp src_cc/task.cpp
+VERILATOR_INPUT = -f input.vc src_tb/sim_top.v src_cc/main.cpp src_cc/task.cpp
 
 ######################################################################
 default: all

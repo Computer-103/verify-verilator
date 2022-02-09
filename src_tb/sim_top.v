@@ -29,21 +29,21 @@ module sim_top (
     output machine_is_stop  // machine is stop
 );
 
-// soc_top Inputs
+// hardware_top Inputs
 wire dev_input_val;
 wire dev_output_ack;
 wire [ 4:0]  dev_input_data;
 
-// soc_top Outputs
+// hardware_top Outputs
 wire dev_input_rdy;
 wire dev_output_rdy;
 wire [ 4:0]  dev_output_data;
 wire pnl_input_active;
 wire pnl_output_active;
-wire [ 5:0]  pnl_op_code = u_soc_top.pnl_op_code;
-wire [11:0]  pnl_strt_value = u_soc_top.pnl_strt_value;
-wire [11:0]  pnl_sel_value = u_soc_top.pnl_sel_value;
-wire [30:0]  pnl_reg_c_value = u_soc_top.pnl_reg_c_value;
+wire [ 5:0]  pnl_op_code = u_hardware_top.pnl_op_code;
+wire [11:0]  pnl_strt_value = u_hardware_top.pnl_strt_value;
+wire [11:0]  pnl_sel_value = u_hardware_top.pnl_sel_value;
+wire [30:0]  pnl_reg_c_value = u_hardware_top.pnl_reg_c_value;
 wire [ 2:0]  pnl_pu_state;
 
 wire serial_out_rclk;
@@ -95,7 +95,7 @@ wire serial_no_1;
 wire serial_no_2;
 wire serial_no_3;
 
-soc_top  u_soc_top (
+hardware_top  u_hardware_top (
     .clk                         ( clk                          ),
     .resetn                      ( resetn                       ),
     .dev_input_val               ( dev_input_val                ),
