@@ -1,5 +1,6 @@
 module sim_top (
     input  clk,             // clk
+    input  dev_clk,         // dev_clk
     input  resetn,          // resetn
     input  btn_start_pulse,
     input  btn_clear_pu,
@@ -40,10 +41,10 @@ wire dev_output_rdy;
 wire [ 4:0]  dev_output_data;
 wire pnl_input_active;
 wire pnl_output_active;
-wire [ 5:0]  pnl_op_code = u_hardware_top.pnl_op_code;
-wire [11:0]  pnl_strt_value = u_hardware_top.pnl_strt_value;
-wire [11:0]  pnl_sel_value = u_hardware_top.pnl_sel_value;
-wire [30:0]  pnl_reg_c_value = u_hardware_top.pnl_reg_c_value;
+wire [ 5:0]  pnl_op_code;
+wire [11:0]  pnl_strt_value;
+wire [11:0]  pnl_sel_value;
+wire [30:0]  pnl_reg_c_value;
 wire [ 2:0]  pnl_pu_state;
 
 wire serial_out_rclk;
@@ -142,8 +143,13 @@ hardware_top  u_hardware_top (
     .serial_in_ser_4             ( serial_in_ser_4              )
 );
 
+assign pnl_op_code = u_hardware_top.pnl_op_code;
+assign pnl_strt_value = u_hardware_top.pnl_strt_value;
+assign pnl_sel_value = u_hardware_top.pnl_sel_value;
+assign pnl_reg_c_value = u_hardware_top.pnl_reg_c_value;
+
 sim_input  u_sim_input (
-    .clk                     ( clk              ),
+    .clk                     ( dev_clk          ),
     .resetn                  ( resetn           ),
     .input_rdy               ( dev_input_rdy    ),
 
@@ -152,7 +158,7 @@ sim_input  u_sim_input (
 );
 
 sim_output  u_sim_output (
-    .clk                     ( clk              ),
+    .clk                     ( dev_clk          ),
     .resetn                  ( resetn           ),
     .output_rdy              ( dev_output_rdy   ),
     .output_data             ( dev_output_data  ),

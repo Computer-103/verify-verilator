@@ -38,6 +38,7 @@ int main(int argc, char** argv, char** env) {
     // inital value of signals
     top->resetn = !0;
     top->clk = 0;
+    top->dev_clk = 0;
 
     top->btn_start_pulse = 0;
     top->btn_clear_pu = 0;
@@ -67,7 +68,12 @@ int main(int argc, char** argv, char** env) {
 
         contextp->timeInc(1);  // 1 timeprecision period passes...
 
-        top->clk = !top->clk;
+        if (contextp->time() % 1 == 0) {
+            top->clk = !top->clk;
+        }
+        if (contextp->time() % 5 == 0) {
+            top->dev_clk = !top->dev_clk;
+        }
         
         // reset
         if (contextp->time() > 1 && contextp->time() < 8) {
