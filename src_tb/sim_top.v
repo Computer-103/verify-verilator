@@ -358,25 +358,25 @@ assign {serial_in_3, serial_in_2} =
 assign {serial_in_4} =
     {4'b0, sw_arr_cmp_value};
 
-reg  [7:0] stop_counter;
+reg  [11:0] stop_counter;
 reg  [2:0] last_pu_state;
 always @(posedge clk) begin
     last_pu_state <= pnl_pu_state;
 end
 always @(posedge clk) begin
     if (~resetn) begin
-        stop_counter <= 8'h00;
+        stop_counter <= 12'h000;
     end else if (pnl_pu_state == last_pu_state) begin
-        if (stop_counter != 8'hff) begin
-            stop_counter <= stop_counter + 8'h01;
+        if (stop_counter != 12'hfff) begin
+            stop_counter <= stop_counter + 12'h001;
         end
     end else begin
-        stop_counter <= 8'h00;
+        stop_counter <= 12'h000;
     end
 end
 
 assign machine_is_stop = 
-    stop_counter == 8'hff &&
+    stop_counter == 12'hfff &&
     !pnl_input_active &&
     !pnl_output_active;
 
